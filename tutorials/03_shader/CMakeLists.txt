@@ -18,7 +18,7 @@ find_package(OpenGL REQUIRED)
 # Find GLUT
 find_package(GLUT REQUIRED)
 # Find GLFW
-find_package(GLFW3 REQUIRED)
+find_package(glfw3 REQUIRED)
 # Find GLEW
 find_package(GLEW REQUIRED)
 # link_directories(/opt/homebrew/Cellar/glew/2.2.0_1/lib)
@@ -42,7 +42,6 @@ FILE(GLOB_RECURSE SOURCE_FILES
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 target_link_libraries(${PROJECT_NAME} PUBLIC
     ${LIBRARIES}
-    GLEW::glew
+    GLEW::GLEW
     glfw
 )
-

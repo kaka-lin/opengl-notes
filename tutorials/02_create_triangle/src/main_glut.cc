@@ -9,8 +9,8 @@
 #define glBindVertexArray glBindVertexArrayAPPLE
 #define glDeleteVertexArrays glDeleteVertexArraysAPPLE
 #else
-#include <GL/glut.h>
 #include <GL/glew.h>
+#include <GL/glut.h>
 #endif
 
 void userInit();

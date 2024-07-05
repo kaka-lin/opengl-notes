@@ -18,7 +18,7 @@ find_package(OpenGL REQUIRED)
 # Find GLUT
 find_package(GLUT REQUIRED)
 # Find GLFW
-find_package(GLFW3 REQUIRED)
+find_package(glfw3 REQUIRED)
 # Find GLEW
 find_package(GLEW REQUIRED)
 # link_directories(/opt/homebrew/Cellar/glew/2.2.0_1/lib)
@@ -39,5 +39,5 @@ foreach(_target
     add_executable(${_target}
         "src/${_target}.cc")
     target_link_libraries(${_target}
-        ${LIBRARIES} GLEW::glew glfw)
+        ${LIBRARIES} GLEW::GLEW glfw)
 endforeach()

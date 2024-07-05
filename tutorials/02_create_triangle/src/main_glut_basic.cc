@@ -5,8 +5,8 @@
 #include <OpenGL/glu.h> // Header File For The GLu32 Library
 #include <GLUT/glut.h>  // Header File For The GLut Library
 #else
-#include <GL/glut.h>
 #include <GL/glew.h>
+#include <GL/glut.h>
 #endif
 
 void userInit();

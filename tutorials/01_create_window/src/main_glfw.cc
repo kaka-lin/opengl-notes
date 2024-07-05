@@ -15,27 +15,50 @@ void processInput(GLFWwindow *window);
 int main(int argc, char* argv[]) {
   // Initialise GLFW
   if (!glfwInit()) {
-		std::cout << "glfwInit() failed." << std::endl;
+		std::cout << "Failed to initialize GLFW" << std::endl;
 		return -1;
 	}
 
-  // We want OpenGL 3.3
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  // Get the version of GLFW
+  int major, minor, revision;
+  glfwGetVersion(&major, &minor, &revision);
+  std::cout << "GLFW version: " << major << "." << minor << "." << revision << std::endl;
+
+  // Check GLFW version and set appropriate OpenGL version and profile
+  if (major >= 3 && minor >= 3) {
+    // We want OpenGL 3.3 or higher
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // only 3.2+
 #ifdef __APPLE__
-  // uncomment this statement to fix compilation on OS X
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    // Fix compilation on OS X
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // only 3.0+
 #endif
+  } else {
+    // Fallback for older versions, for example, 3.2.1
+    // FIXME: This is not working on my computer
+    //        docker container: ubuntu:18.04, macOS: 14.3
+    // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
+    // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // only 3.2+
+    // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE); //only 3.0+
+  }
 
   // Open a window and create its OpenGL context
   GLFWwindow* window;
   window = glfwCreateWindow(640, 480, "Hello OpenGL", NULL, NULL);
   if (window == NULL) {
     std::cout << "Failed to create GLFW window" << std::endl;
+    // const char* description;
+    // int code = glfwGetError(&description);
+    // if (code != GLFW_NO_ERROR) {
+    //     std::cerr << "GLFW Error: " << description << std::endl;
+    // }
     glfwTerminate();
     return -1;
   }
+
   // Make the window's context current
   glfwMakeContextCurrent(window);
   // Ensure we can capture the escape key being pressed below
@@ -76,7 +99,7 @@ void run(GLFWwindow* window) {
 
     // Swap front and back buffers
     glfwSwapBuffers(window);
-    // Poll for and process events
+    // Poll for and process events (監聽滑鼠和鍵盤事件)
     glfwPollEvents();
   }
 }
