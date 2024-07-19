@@ -13,6 +13,7 @@
 #include <GL/glut.h>
 #endif
 
+void keyboard(unsigned char key, int x, int y);
 void userInit();
 void display();
 
@@ -24,18 +25,40 @@ GLuint vao;
 
 int main(int argc, char* argv[]) {
 	glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_DEPTH | GLUT_SINGLE | GLUT_RGB);
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
   glutInitWindowPosition(100, 100);
-	glutInitWindowSize(320, 320);
+	glutInitWindowSize(640, 480);
 	glutCreateWindow("Hello OpenGL");
 
-  userInit();
-	glutDisplayFunc(display);
+  // 检查 OpenGL 版本
+  const GLubyte* renderer = glGetString(GL_RENDERER); // get renderer string
+  const GLubyte* version = glGetString(GL_VERSION);   // version as a string
+  std::cout << "Renderer: " << renderer << std::endl;
+  std::cout << "OpenGL version supported: " << version << std::endl;
 
-	//Enter the GLUT event loop
+  // set the viewport
+  glViewport(0, 0, 640, 480);
+
+  // glewExperimental = GL_TRUE; // 確保 GLEW 使用現代方法來檢測和獲取功能
+  // if (glewInit() != GLEW_OK) {
+  //   std::cout << "Failed to initialize GLEW" << std::endl;
+  //   return -1;
+  // }
+
+  userInit();
+  glutDisplayFunc(display);
+  glutKeyboardFunc(keyboard);
+
+	// Enter the GLUT event loop
   glutMainLoop();
 
 	return 0;
+}
+
+// 處理鍵盤輸入
+void keyboard(unsigned char key, int x, int y) {
+  if (key == 27) // 按下ESC鍵退出
+    exit(0);
 }
 
 // like processing setting
@@ -50,11 +73,11 @@ void userInit() {
     0.0f,  0.5f, 0.0f
   };
 
-  // Create VAO
+  // Create Vertex Array Object (VAO)
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
 
-  // Create VBO and Copy vertex data
+  // Create Vertex Buffer Object (VBO) and Copy vertex data
   glGenBuffers(1, &vbo); // number, array to object id
   glBindBuffer(GL_ARRAY_BUFFER, vbo); // 綁定
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); //傳輸資料
@@ -73,17 +96,26 @@ void userInit() {
   // 其中第一個參數 0 就是對應 vertex shader 中的 location=0
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0); // 是否啟動 VAO; 啟動 location=0
+
+  // 解除綁定
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
 }
 
 // like processing draw
 void display() {
-  // clear color buffer
-  glClearColor(0.0, 0.0, 0.0, 0.0);
+  // 更改清除顏色
+  glClearColor(0.2, 0.3, 0.3, 1.0);
+  // 清除顏色緩衝區，使用設置的清除顏色
   glClear(GL_COLOR_BUFFER_BIT);
 
-  // Draw the triangle !
-  // Starting from vertex 0; 3 vertices total -> 1 triangle
-  // glBindVertexArray(vao);
+  // Starting draw the triangle !
+  glBindVertexArray(vao);
+  // from vertex 0; read 3 vertices => 1 triangle
   glDrawArrays(GL_TRIANGLES, 0, 3);
-  glutSwapBuffers();
+  glBindVertexArray(0); // 解除綁定
+
+  // glutSwapBuffers swaps the buffers of the current window if double buffered.
+  // display rendering results
+  glutSwapBuffers(); // for GLUT_DOUBLE
 }
