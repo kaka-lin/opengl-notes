@@ -1,11 +1,11 @@
 #include <iostream>
 
+#include <GL/glew.h>
 #ifdef __APPLE__
 #include <OpenGL/gl.h>  // Header File For The OpenGL32 Library
 #include <OpenGL/glu.h> // Header File For The GLu32 Library
 #include <GLUT/glut.h>  // Header File For The GLut Library
 #else
-#include <GL/glew.h>
 #include <GL/glut.h>
 #endif
 
@@ -33,6 +33,12 @@ int main(int argc, char* argv[]) {
 
   // set the viewport
   glViewport(0, 0, 640, 480);
+
+  glewExperimental = GL_TRUE; // 確保 GLEW 使用現代方法來檢測和獲取功能
+  if (glewInit() != GLEW_OK) {
+    std::cout << "Failed to initialize GLEW" << std::endl;
+    return -1;
+  }
 
 	userInit();
 
