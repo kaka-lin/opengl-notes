@@ -35,7 +35,7 @@ include_directories(${INCLUDE_DIRS})
 include_directories("${CMAKE_SOURCE_DIR}/src")
 
 foreach(_target
-main_glfw main_glfw_basic main_glut main_glut_basic)
+main_glfw main_glfw_basic main_glut main_glut_basic main_glut_two_triangle)
     add_executable(${_target}
         "src/${_target}.cc")
     target_link_libraries(${_target}
