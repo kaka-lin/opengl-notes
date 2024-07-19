@@ -61,6 +61,9 @@ int main(int argc, char* argv[]) {
 
   // Make the window's context current
   glfwMakeContextCurrent(window);
+
+  // set the viewport
+  glViewport(0, 0, 640, 480);
   // Ensure we can capture the escape key being pressed below
   glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -68,15 +71,19 @@ int main(int argc, char* argv[]) {
   /* Initialize GLEW */
   // glewInit() 必須在 opengl context 之後，
   // 即必須在 `glfwMakeContextCurrent(window)` 之後
-  glewExperimental = GL_TRUE;
+  glewExperimental = GL_TRUE; // 確保 GLEW 使用現代方法來檢測和獲取功能
   if (glewInit() != GLEW_OK) {
     std::cout << "Failed to initialize GLEW" << std::endl;
     return -1;
   }
 
+  // 初始化 OpenGL 設定
   userInit();
+
   // call run (display) function
   run(window);
+
+  // 終止，釋放所有資源
   glfwTerminate();
 
 	return 0;
